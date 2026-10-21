@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "birthday": "1990-04-12",
+  "categories": [
+    {
+      "id": "home",
+      "name": "Home"
+    },
+    {
+      "id": "work",
+      "name": "Work"
+    },
+    {
+      "id": "study",
+      "name": "Education"
+    },
+    {
+      "id": "car",
+      "name": "Car"
+    }
+  ],
+  "items": [
+    {
+      "id": "item-1",
+      "categoryId": "home",
+      "label": "Parents' house, Leeds",
+      "start": "1990-04",
+      "end": "2008-08",
+      "color": "slate"
+    },
+    {
+      "id": "item-2",
+      "categoryId": "home",
+      "label": "Halls, Manchester",
+      "start": "2008-09",
+      "end": "2009-06",
+      "color": "amber"
+    },
+    {
+      "id": "item-3",
+      "categoryId": "home",
+      "label": "Shared house, Fallowfield",
+      "start": "2009-07",
+      "end": "2011-06",
+      "color": "teal"
+    },
+    {
+      "id": "item-4",
+      "categoryId": "home",
+      "label": "Flat, Ancoats",
+      "start": "2011-07",
+      "end": "2016-03",
+      "color": "pink"
+    },
+    {
+      "id": "item-5",
+      "categoryId": "home",
+      "label": "House, Chorlton",
+      "start": "2016-04",
+      "end": null,
+      "color": "green"
+    },
+    {
+      "id": "item-6",
+      "categoryId": "work",
+      "label": "Café, Saturday job",
+      "start": "2006-06",
+      "end": "2008-08",
+      "color": "orange"
+    },
+    {
+      "id": "item-7",
+      "categoryId": "work",
+      "label": "Junior developer, Acme",
+      "start": "2011-09",
+      "end": "2014-12",
+      "color": "blue"
+    },
+    {
+      "id": "item-8",
+      "categoryId": "work",
+      "label": "Developer, Widgets Ltd",
+      "start": "2015-01",
+      "end": "2019-07",
+      "color": "violet"
+    },
+    {
+      "id": "item-9",
+      "categoryId": "work",
+      "label": "Freelance side project",
+      "start": "2017-03",
+      "end": "2018-10",
+      "color": "lime"
+    },
+    {
+      "id": "item-10",
+      "categoryId": "work",
+      "label": "Senior engineer, Example Co",
+      "start": "2019-08",
+      "end": null,
+      "color": "indigo"
+    },
+    {
+      "id": "item-11",
+      "categoryId": "study",
+      "label": "Secondary school",
+      "start": "2001-09",
+      "end": "2008-07",
+      "color": "slate"
+    },
+    {
+      "id": "item-12",
+      "categoryId": "study",
+      "label": "BSc Computer Science",
+      "start": "2008-09",
+      "end": "2011-06",
+      "color": "amber"
+    },
+    {
+      "id": "item-13",
+      "categoryId": "study",
+      "label": "Evening Spanish class",
+      "start": "2022-09",
+      "end": "2023-06",
+      "color": "red"
+    },
+    {
+      "id": "item-14",
+      "categoryId": "car",
+      "label": "Ford Fiesta",
+      "start": "2010-02",
+      "end": "2015-05",
+      "color": "red"
+    },
+    {
+      "id": "item-15",
+      "categoryId": "car",
+      "label": "VW Golf",
+      "start": "2015-06",
+      "end": "2021-11",
+      "color": "blue"
+    },
+    {
+      "id": "item-16",
+      "categoryId": "car",
+      "label": "Electric hatchback",
+      "start": "2021-12",
+      "end": null,
+      "color": "teal"
+    }
+  ]
+}

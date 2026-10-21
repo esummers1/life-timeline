@@ -1,0 +1,700 @@
+:root {
+  --bg: #f6f6f8;
+  --surface: #ffffff;
+  --surface-raised: #f0f0f4;
+  --border: #e3e3ea;
+  --grid-month: rgb(20 20 40 / 0.045);
+  --grid-year: rgb(20 20 40 / 0.11);
+  --text: #18181d;
+  --text-muted: #6c6c78;
+  --accent: #5b5bd6;
+  --accent-text: #ffffff;
+  --danger: #dc2626;
+  --shadow: 0 10px 40px rgb(20 20 40 / 0.16);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0e0f13;
+    --surface: #15161b;
+    --surface-raised: #1e1f26;
+    --border: #2a2b34;
+    --grid-month: rgb(255 255 255 / 0.035);
+    --grid-year: rgb(255 255 255 / 0.09);
+    --text: #ececf2;
+    --text-muted: #9393a2;
+    --accent: #8b8bf5;
+    --accent-text: #0e0f13;
+    --danger: #f87171;
+    --shadow: 0 10px 40px rgb(0 0 0 / 0.5);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0e0f13;
+  --surface: #15161b;
+  --surface-raised: #1e1f26;
+  --border: #2a2b34;
+  --grid-month: rgb(255 255 255 / 0.035);
+  --grid-year: rgb(255 255 255 / 0.09);
+  --text: #ececf2;
+  --text-muted: #9393a2;
+  --accent: #8b8bf5;
+  --accent-text: #0e0f13;
+  --danger: #f87171;
+  --shadow: 0 10px 40px rgb(0 0 0 / 0.5);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.4 Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* Toolbar */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.brand {
+  margin: 0 8px 0 0;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.toolbar-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.toolbar-field input[type='date'] {
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.toolbar-field input[type='range'] {
+  width: 140px;
+  accent-color: var(--accent);
+}
+
+.button {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 120ms;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--surface-raised);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.button.primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.button.primary:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--accent) 88%, var(--text));
+}
+
+.button.danger {
+  color: var(--danger);
+}
+
+.theme-button {
+  min-width: 78px;
+}
+
+.text-button {
+  padding: 4px 6px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.text-button:hover {
+  color: var(--text);
+  background: var(--surface-raised);
+}
+
+.icon-button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.icon-button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Timeline */
+
+.timeline {
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior-x: contain;
+  background: var(--surface);
+}
+
+.timeline-canvas {
+  position: relative;
+  min-height: 100%;
+}
+
+.timeline-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.timeline-corner {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  flex: none;
+  width: var(--label-width);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+.axis {
+  position: relative;
+  flex: none;
+}
+
+.axis-row {
+  position: relative;
+}
+
+.axis-years {
+  height: 28px;
+}
+
+.axis-subdivisions {
+  height: 22px;
+}
+
+.axis-ages {
+  height: 22px;
+}
+
+.axis-cell {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  padding: 0 6px;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.axis-years .axis-cell {
+  border-left: 1px solid var(--grid-year);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.axis-subdivisions .axis-cell {
+  justify-content: center;
+  padding: 0;
+  border-left: 1px solid var(--grid-month);
+  background: color-mix(in oklab, var(--season) 9%, transparent);
+  box-shadow: inset 0 -2px 0 color-mix(in oklab, var(--season) 55%, transparent);
+}
+
+.axis-subdivisions .axis-cell.year-start {
+  border-left-color: var(--grid-year);
+}
+
+.season-spring { --season: #22c55e; }
+.season-summer { --season: #f59e0b; }
+.season-autumn { --season: #ea580c; }
+.season-winter { --season: #3b82f6; }
+
+.age-marker {
+  position: absolute;
+  top: 3px;
+  transform: translateX(-50%);
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.today-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--accent);
+}
+
+.timeline-body {
+  position: relative;
+}
+
+.timeline-grid {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--label-width);
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--grid-year) 0 1px,
+    transparent 1px calc(var(--px-per-month) * 12)
+  );
+}
+
+.timeline-grid.show-months {
+  background-image:
+    repeating-linear-gradient(to right, var(--grid-year) 0 1px, transparent 1px calc(var(--px-per-month) * 12)),
+    repeating-linear-gradient(to right, var(--grid-month) 0 1px, transparent 1px var(--px-per-month));
+}
+
+.birthday-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 2px dotted color-mix(in oklab, var(--accent) 45%, transparent);
+}
+
+.today-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: color-mix(in oklab, var(--accent) 70%, transparent);
+}
+
+.cursor-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 1px;
+  background: var(--text);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.lane {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+.lane-label {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: var(--label-width);
+  padding: 0 8px 0 12px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+.lane-name {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.lane-name:hover {
+  border-color: var(--border);
+}
+
+.lane-name:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface-raised);
+}
+
+.lane-actions {
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 120ms;
+}
+
+.lane-move {
+  display: grid;
+}
+
+.lane-move .icon-button {
+  width: 18px;
+  height: 13px;
+  font-size: 9px;
+}
+
+.lane:hover .lane-actions,
+.lane-actions:focus-within {
+  opacity: 1;
+}
+
+.lane-add {
+  height: 44px;
+  border-bottom: none;
+}
+
+.lane-track {
+  position: relative;
+  z-index: 1;
+  flex: none;
+}
+
+.bar {
+  position: absolute;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  overflow: clip;
+  padding: 0;
+  border: 1px solid color-mix(in oklab, var(--item-color) 45%, transparent);
+  border-radius: 7px;
+  background: color-mix(in oklab, var(--item-color) 20%, var(--surface));
+  box-shadow: inset 3px 0 0 var(--item-color);
+  color: color-mix(in oklab, var(--item-color) 35%, var(--text));
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 12.5px;
+  transition: background 120ms;
+}
+
+.bar:hover {
+  background: color-mix(in oklab, var(--item-color) 32%, var(--surface));
+}
+
+.bar:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.bar.ongoing {
+  border-right-style: dashed;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  background:
+    linear-gradient(to right, transparent calc(100% - 24px), var(--surface)),
+    color-mix(in oklab, var(--item-color) 20%, var(--surface));
+}
+
+/* Sticky against the scroller (overflow: clip on .bar doesn't trap it) so long bars keep their label in view. */
+.bar-content {
+  position: sticky;
+  left: var(--label-width);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0 8px 0 10px;
+}
+
+.bar-label {
+  flex: none;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.bar-dates {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.65;
+  font-size: 11.5px;
+}
+
+/* Snapshot */
+
+.snapshot {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 64px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.snapshot-when {
+  flex: none;
+  display: grid;
+  width: 200px;
+}
+
+.snapshot-eyebrow {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.snapshot-when strong {
+  font-size: 15px;
+}
+
+.snapshot-details {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.snapshot-lanes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+}
+
+.snapshot-lane {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.snapshot-lane-name {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.chip {
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--item-color) 20%, var(--surface));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--item-color) 40%, transparent);
+  color: color-mix(in oklab, var(--item-color) 35%, var(--text));
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* Dialog */
+
+.dialog {
+  width: min(460px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.dialog::backdrop {
+  background: rgb(10 10 20 / 0.4);
+  backdrop-filter: blur(2px);
+}
+
+.dialog form {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+}
+
+.dialog h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.field > span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.field input:not([type='checkbox'], [type='radio']),
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 20%, transparent);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 12px;
+}
+
+.field-error {
+  margin: -6px 0 0;
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.month-picker {
+  display: grid;
+  grid-template-columns: 1fr 76px;
+  gap: 6px;
+}
+
+.month-picker :disabled {
+  opacity: 0.45;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  accent-color: var(--accent);
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--item-color);
+  cursor: pointer;
+  transition: transform 120ms;
+}
+
+.swatch:hover {
+  transform: scale(1.12);
+}
+
+.swatch:has(input:checked) {
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--item-color);
+}
+
+.swatch:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.swatch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
