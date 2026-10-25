@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "birthday": "1947-07-30",
+  "categories": [
+    {
+      "id": "arnold-home",
+      "name": "Home"
+    },
+    {
+      "id": "arnold-education",
+      "name": "Education"
+    },
+    {
+      "id": "arnold-work",
+      "name": "Work"
+    },
+    {
+      "id": "arnold-relationship",
+      "name": "Relationship"
+    }
+  ],
+  "items": [
+    {
+      "id": "arnold-1",
+      "categoryId": "arnold-home",
+      "label": "Thal, Austria",
+      "start": "1947-07",
+      "end": "1966-09",
+      "color": "red"
+    },
+    {
+      "id": "arnold-2",
+      "categoryId": "arnold-home",
+      "label": "Munich, West Germany",
+      "start": "1966-10",
+      "end": "1968-09",
+      "color": "amber"
+    },
+    {
+      "id": "arnold-3",
+      "categoryId": "arnold-home",
+      "label": "Los Angeles",
+      "start": "1968-10",
+      "end": null,
+      "color": "blue",
+      "notes": "Arrived with little money and less English."
+    },
+    {
+      "id": "arnold-4",
+      "categoryId": "arnold-education",
+      "label": "Business degree",
+      "start": "1971-09",
+      "end": "1979-05",
+      "color": "teal",
+      "notes": "Studied at Santa Monica College, then finished a degree with the University of Wisconsin–Superior."
+    },
+    {
+      "id": "arnold-5",
+      "categoryId": "arnold-work",
+      "label": "Austrian Army",
+      "start": "1965-01",
+      "end": "1965-12",
+      "color": "slate",
+      "notes": "Went absent without leave to compete in Junior Mr. Europe, and won."
+    },
+    {
+      "id": "arnold-6",
+      "categoryId": "arnold-work",
+      "label": "Competitive bodybuilding",
+      "start": "1963-01",
+      "end": "1980-10",
+      "color": "orange",
+      "notes": "Youngest ever Mr. Universe, at 20."
+    },
+    {
+      "id": "arnold-7",
+      "categoryId": "arnold-work",
+      "label": "Mr. Olympia, six years running",
+      "start": "1970-09",
+      "end": "1975-11",
+      "color": "amber",
+      "notes": "Then came back to win a seventh in 1980."
+    },
+    {
+      "id": "arnold-8",
+      "categoryId": "arnold-work",
+      "label": "Acting",
+      "start": "1970-02",
+      "end": "2003-10",
+      "color": "violet",
+      "notes": "From Hercules in New York to Conan, The Terminator, Predator, Twins and Terminator 2."
+    },
+    {
+      "id": "arnold-9",
+      "categoryId": "arnold-work",
+      "label": "Governor of California",
+      "start": "2003-11",
+      "end": "2011-01",
+      "color": "green"
+    },
+    {
+      "id": "arnold-10",
+      "categoryId": "arnold-work",
+      "label": "Acting again",
+      "start": "2011-02",
+      "end": null,
+      "color": "violet",
+      "notes": "He said he'd be back."
+    },
+    {
+      "id": "arnold-11",
+      "categoryId": "arnold-relationship",
+      "label": "Dating Maria Shriver",
+      "start": "1977-08",
+      "end": "1986-03",
+      "color": "pink"
+    },
+    {
+      "id": "arnold-12",
+      "categoryId": "arnold-relationship",
+      "label": "Married to Maria Shriver",
+      "start": "1986-04",
+      "end": "2011-05",
+      "color": "red"
+    }
+  ]
+}

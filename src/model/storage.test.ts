@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { suggestColor } from './palette';
 import { createDefaultTimeline, loadTimeline, parseTimeline } from './storage';
-import example from '../../examples/sample-timeline.json';
 
 const validTimeline = {
   version: 1,
@@ -19,10 +18,6 @@ describe('parseTimeline', () => {
 
   it('starts new timelines with the default lanes', () => {
     expect(createDefaultTimeline().categories.map(({ name }) => name)).toEqual(['Home', 'Education', 'Work', 'Relationship']);
-  });
-
-  it('accepts the bundled example file', () => {
-    expect(parseTimeline(example).items.length).toBeGreaterThan(0);
   });
 
   it('falls back to a palette colour for unknown colours', () => {

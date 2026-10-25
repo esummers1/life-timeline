@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ItemDialog } from './components/ItemDialog';
+import { ReplaceTimelineDialog } from './components/ReplaceTimelineDialog';
 import { Snapshot } from './components/Snapshot';
 import { MAX_PX_PER_MONTH, MIN_PX_PER_MONTH, Timeline } from './components/Timeline';
 import { moveCategory } from './model/categories';
@@ -7,11 +8,19 @@ import { isPlausibleBirthday, monthIndexOfDate, positionOfDate, toMonthKey } fro
 import { suggestColor } from './model/palette';
 import { createDefaultTimeline, loadTimeline, parseTimeline, saveTimeline } from './model/storage';
 import type { DateKey, LifeItem, TimelineData } from './model/types';
+import { findUnmodifiedSample, SAMPLES } from './samples';
 
 type ThemePreference = 'system' | 'light' | 'dark';
 // Also read by the inline script in index.html, which applies the theme before first paint.
 const THEME_STORAGE_KEY = 'life-timeline:theme';
 const THEME_ORDER: ThemePreference[] = ['system', 'light', 'dark'];
+
+/** A timeline to swap in for the current one, and how to word the confirmation. */
+interface Replacement {
+  timeline: TimelineData;
+  title: string;
+  confirmLabel: string;
+}
 
 export function App() {
   const [data, setData] = useState<TimelineData>(() => loadTimeline() ?? createDefaultTimeline());
@@ -23,10 +32,27 @@ export function App() {
   const [hoverPosition, setHoverPosition] = useState<number | null>(null);
   const [editing, setEditing] = useState<{ item: LifeItem; isNew: boolean } | null>(null);
   const [focusCategoryId, setFocusCategoryId] = useState<string | null>(null);
+  const [pendingReplacement, setPendingReplacement] = useState<Replacement | null>(null);
   const [theme, setTheme] = useThemePreference();
   const importInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => saveTimeline(data), [data]);
+
+  const currentSample = findUnmodifiedSample(data);
+
+  /**
+   * Replaces the whole timeline, first asking for confirmation (with the chance to
+   * export) unless there's nothing to lose: no items or birthday, or an untouched sample.
+   */
+  const replaceTimeline = (replacement: Replacement) => {
+    const hasNothingToLose = (data.items.length === 0 && data.birthday === null) || currentSample !== undefined;
+    if (hasNothingToLose) setData(replacement.timeline);
+    else setPendingReplacement(replacement);
+  };
+
+  const startOver = () => replaceTimeline({
+    timeline: createDefaultTimeline(), title: 'Start a new timeline?', confirmLabel: 'Start over',
+  });
 
   const createItem = (categoryId: string, monthIndex: number) => {
     const month = toMonthKey(monthIndex);
@@ -98,9 +124,7 @@ export function App() {
   const importTimeline = async (file: File) => {
     try {
       const imported = parseTimeline(JSON.parse(await file.text()));
-      if (data.items.length === 0 || confirm('Replace your current timeline with the imported one?')) {
-        setData(imported);
-      }
+      replaceTimeline({ timeline: imported, title: `Import ${file.name}?`, confirmLabel: 'Import' });
     } catch (error) {
       alert(`Couldn’t import ${file.name}: ${error instanceof Error ? error.message : error}`);
     }
@@ -139,6 +163,21 @@ export function App() {
         >
           + Add item
         </button>
+        <select
+          className="button"
+          aria-label="Try a sample"
+          value=""
+          onChange={(event) => {
+            const sample = SAMPLES.find(({ id }) => id === event.target.value);
+            if (sample) {
+              replaceTimeline({ timeline: sample.timeline, title: `Load ${sample.name}’s timeline?`, confirmLabel: 'Load sample' });
+            }
+          }}
+        >
+          <option value="" disabled>Try a sample…</option>
+          {SAMPLES.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
+        </select>
+        <button className="button" onClick={startOver}>Start over</button>
         <button className="button" onClick={() => importInputRef.current?.click()}>Import</button>
         <button className="button" onClick={exportTimeline}>Export</button>
         <button
@@ -160,6 +199,15 @@ export function App() {
           }}
         />
       </header>
+
+      {currentSample && (
+        <div className="sample-banner" role="status">
+          <span>
+            You’re looking at <strong>{currentSample.name}</strong>’s sample timeline. {currentSample.note}
+          </span>
+          <button className="button primary" onClick={startOver}>Start your own timeline</button>
+        </div>
+      )}
 
       <Timeline
         data={data}
@@ -184,6 +232,20 @@ export function App() {
         isToday={hoverPosition === null}
         nowMonth={nowMonth}
       />
+
+      {pendingReplacement && (
+        <ReplaceTimelineDialog
+          title={pendingReplacement.title}
+          confirmLabel={pendingReplacement.confirmLabel}
+          itemCount={data.items.length}
+          onExport={exportTimeline}
+          onConfirm={() => {
+            setData(pendingReplacement.timeline);
+            setPendingReplacement(null);
+          }}
+          onClose={() => setPendingReplacement(null)}
+        />
+      )}
 
       {editing && (
         <ItemDialog

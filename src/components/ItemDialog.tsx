@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { MONTH_NAMES, parseMonthKey, splitMonthIndex, toMonthKey } from '../model/months';
 import { COLOR_KEYS, PALETTE } from '../model/palette';
 import type { Category, LifeItem, MonthKey } from '../model/types';
+import { useModalDialog } from './useModalDialog';
 
 interface ItemDialogProps {
   item: LifeItem;
@@ -15,32 +16,17 @@ interface ItemDialogProps {
 /**
  * Modal form for adding or editing an item. Edits are held locally and only
  * passed to `onSave` on submit; Escape, Cancel, or clicking the backdrop discards them.
- * A backdrop click only counts if the press also started on the backdrop, so a text
- * selection dragged out of a field doesn't close the dialog.
  */
 export function ItemDialog({ item: initialItem, isNew, categories, onSave, onDelete, onClose }: ItemDialogProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const pressStartedOnBackdropRef = useRef(false);
+  const { dialogProps, close } = useModalDialog(onClose);
   const [item, setItem] = useState(initialItem);
-
-  useEffect(() => {
-    if (!dialogRef.current?.open) dialogRef.current?.showModal();
-  }, []);
 
   const isEndBeforeStart = item.end !== null && parseMonthKey(item.end)! < parseMonthKey(item.start)!;
   const canSave = item.label.trim() !== '' && !isEndBeforeStart;
   const update = (changes: Partial<LifeItem>) => setItem((current) => ({ ...current, ...changes }));
 
   return (
-    <dialog
-      ref={dialogRef}
-      className="dialog"
-      onClose={onClose}
-      onPointerDown={(event) => (pressStartedOnBackdropRef.current = event.target === dialogRef.current)}
-      onClick={(event) => {
-        if (pressStartedOnBackdropRef.current && event.target === dialogRef.current) dialogRef.current.close();
-      }}
-    >
+    <dialog className="dialog" {...dialogProps}>
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -117,7 +103,7 @@ export function ItemDialog({ item: initialItem, isNew, categories, onSave, onDel
             <button type="button" className="button danger" onClick={() => onDelete(item.id)}>Delete</button>
           )}
           <span className="spacer" />
-          <button type="button" className="button" onClick={() => dialogRef.current?.close()}>Cancel</button>
+          <button type="button" className="button" onClick={close}>Cancel</button>
           <button type="submit" className="button primary" disabled={!canSave}>Save</button>
         </footer>
       </form>

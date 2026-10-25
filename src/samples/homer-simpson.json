@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "birthday": "1956-05-12",
+  "categories": [
+    {
+      "id": "homer-home",
+      "name": "Home"
+    },
+    {
+      "id": "homer-education",
+      "name": "Education"
+    },
+    {
+      "id": "homer-work",
+      "name": "Work"
+    },
+    {
+      "id": "homer-relationship",
+      "name": "Relationship"
+    },
+    {
+      "id": "homer-family",
+      "name": "Family"
+    },
+    {
+      "id": "homer-car",
+      "name": "Car"
+    }
+  ],
+  "items": [
+    {
+      "id": "homer-1",
+      "categoryId": "homer-home",
+      "label": "The Simpson family farm",
+      "start": "1956-05",
+      "end": "1968-12",
+      "color": "lime"
+    },
+    {
+      "id": "homer-2",
+      "categoryId": "homer-home",
+      "label": "Grampa's house",
+      "start": "1969-01",
+      "end": "1978-05",
+      "color": "slate"
+    },
+    {
+      "id": "homer-3",
+      "categoryId": "homer-home",
+      "label": "First apartment",
+      "start": "1978-06",
+      "end": "1983-02",
+      "color": "amber"
+    },
+    {
+      "id": "homer-4",
+      "categoryId": "homer-home",
+      "label": "742 Evergreen Terrace",
+      "start": "1983-03",
+      "end": null,
+      "color": "pink",
+      "notes": "Bought when Lisa was on the way. Remortgaged more times than anyone can count."
+    },
+    {
+      "id": "homer-5",
+      "categoryId": "homer-education",
+      "label": "Springfield High School",
+      "start": "1970-09",
+      "end": "1974-06",
+      "color": "amber"
+    },
+    {
+      "id": "homer-6",
+      "categoryId": "homer-education",
+      "label": "Springfield University",
+      "start": "1993-09",
+      "end": "1994-05",
+      "color": "violet",
+      "notes": "Sent back to finish his degree in nuclear physics. Didn't go well for the nerds."
+    },
+    {
+      "id": "homer-7",
+      "categoryId": "homer-work",
+      "label": "Safety inspector, Springfield Nuclear Power Plant",
+      "start": "1980-03",
+      "end": null,
+      "color": "green",
+      "notes": "Sector 7G. Employee of the month, once, by default."
+    },
+    {
+      "id": "homer-8",
+      "categoryId": "homer-work",
+      "label": "The Be Sharps",
+      "start": "1985-06",
+      "end": "1986-12",
+      "color": "pink",
+      "notes": "Barbershop quartet. Won a Grammy for \"Baby on Board\"."
+    },
+    {
+      "id": "homer-9",
+      "categoryId": "homer-work",
+      "label": "Mr. Plow",
+      "start": "1992-11",
+      "end": "1993-01",
+      "color": "orange",
+      "notes": "Call KL5-3226."
+    },
+    {
+      "id": "homer-10",
+      "categoryId": "homer-work",
+      "label": "Monorail conductor",
+      "start": "1993-01",
+      "end": "1993-02",
+      "color": "teal"
+    },
+    {
+      "id": "homer-11",
+      "categoryId": "homer-work",
+      "label": "Astronaut",
+      "start": "1994-03",
+      "end": "1994-03",
+      "color": "indigo",
+      "notes": "Saved the mission with an inanimate carbon rod."
+    },
+    {
+      "id": "homer-12",
+      "categoryId": "homer-relationship",
+      "label": "Dating Marge Bouvier",
+      "start": "1974-03",
+      "end": "1978-05",
+      "color": "pink",
+      "notes": "Met in detention; first date at the prom."
+    },
+    {
+      "id": "homer-13",
+      "categoryId": "homer-relationship",
+      "label": "Married to Marge",
+      "start": "1978-06",
+      "end": null,
+      "color": "red"
+    },
+    {
+      "id": "homer-14",
+      "categoryId": "homer-family",
+      "label": "Bart",
+      "start": "1980-04",
+      "end": null,
+      "color": "orange",
+      "notes": "Eat my shorts."
+    },
+    {
+      "id": "homer-15",
+      "categoryId": "homer-family",
+      "label": "Lisa",
+      "start": "1982-05",
+      "end": null,
+      "color": "red"
+    },
+    {
+      "id": "homer-16",
+      "categoryId": "homer-family",
+      "label": "Maggie",
+      "start": "1989-01",
+      "end": null,
+      "color": "blue"
+    },
+    {
+      "id": "homer-17",
+      "categoryId": "homer-car",
+      "label": "Pink sedan",
+      "start": "1984-01",
+      "end": null,
+      "color": "pink"
+    },
+    {
+      "id": "homer-18",
+      "categoryId": "homer-car",
+      "label": "The Homer",
+      "start": "1991-02",
+      "end": "1991-02",
+      "color": "lime",
+      "notes": "Designed it for his half-brother Herb. It bankrupted Powell Motors."
+    }
+  ]
+}
