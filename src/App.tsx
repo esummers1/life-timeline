@@ -3,10 +3,10 @@ import { ItemDialog } from './components/ItemDialog';
 import { Snapshot } from './components/Snapshot';
 import { MAX_PX_PER_MONTH, MIN_PX_PER_MONTH, Timeline } from './components/Timeline';
 import { moveCategory } from './model/categories';
-import { monthIndexOfDate, positionOfDate, toMonthKey } from './model/months';
+import { isPlausibleBirthday, monthIndexOfDate, positionOfDate, toMonthKey } from './model/months';
 import { suggestColor } from './model/palette';
 import { createDefaultTimeline, loadTimeline, parseTimeline, saveTimeline } from './model/storage';
-import type { LifeItem, TimelineData } from './model/types';
+import type { DateKey, LifeItem, TimelineData } from './model/types';
 
 type ThemePreference = 'system' | 'light' | 'dark';
 const THEME_STORAGE_KEY = 'life-timeline:theme';
@@ -111,10 +111,9 @@ export function App() {
         <h1 className="brand">Life Timeline</h1>
         <label className="toolbar-field">
           <span>Birthday</span>
-          <input
-            type="date"
-            value={data.birthday ?? ''}
-            onChange={(event) => setData((current) => ({ ...current, birthday: event.target.value || null }))}
+          <BirthdayInput
+            value={data.birthday}
+            onChange={(birthday) => setData((current) => ({ ...current, birthday }))}
           />
         </label>
         <label className="toolbar-field">
@@ -197,6 +196,33 @@ export function App() {
         />
       )}
     </div>
+  );
+}
+
+/**
+ * A date field that only reports plausible birthdays (see `isPlausibleBirthday`).
+ * The field keeps its own text so in-between values, like a half-typed year, can be
+ * shown while typing without being applied; a half-filled field reads as empty with
+ * `validity.badInput` set, and is ignored rather than clearing the birthday.
+ */
+function BirthdayInput({ value, onChange }: { value: DateKey | null; onChange(birthday: DateKey | null): void }) {
+  const [text, setText] = useState(value ?? '');
+
+  useEffect(() => setText(value ?? ''), [value]);
+
+  return (
+    <input
+      type="date"
+      min="1900-01-01"
+      value={text}
+      onChange={(event) => {
+        setText(event.target.value);
+        if (!event.target.validity.badInput && isPlausibleBirthday(event.target.value, new Date())) {
+          onChange(event.target.value || null);
+        }
+      }}
+      onBlur={() => setText(value ?? '')}
+    />
   );
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { packLane, timelineRange, zoomToFill } from '../model/layout';
 import {
   birthdayPosition, formatMonth, parseDateKey, positionOfDate, seasonOf, splitMonthIndex,
@@ -34,7 +34,8 @@ interface TimelineProps {
  * column on the left, and one swimlane per category whose items are stacked into
  * rows wherever they overlap. Dotted lines mark each birthday, a solid line marks
  * today, and a cursor line follows the mouse (reported via `onHoverPositionChange`
- * as a fractional month position).
+ * as a fractional month position, and kept up to date while scrolling under a
+ * stationary pointer).
  *
  * The furthest zoom-out shows the whole range across the visible width, so the
  * timeline always fills the window; that minimum is reported through
@@ -55,6 +56,7 @@ export function Timeline({
 }: TimelineProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const zoomAnchorRef = useRef<{ position: number; viewportX: number } | null>(null);
+  const pointerClientXRef = useRef<number | null>(null);
   const pxPerMonthRef = useRef(pxPerMonth);
   pxPerMonthRef.current = pxPerMonth;
   const [viewportWidth, setViewportWidth] = useState(0);
@@ -110,6 +112,9 @@ export function Timeline({
     const scroller = scrollRef.current;
     if (!scroller) return;
     const handleWheel = (event: WheelEvent) => {
+      const pixelsPerDeltaUnit = event.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16
+        : event.deltaMode === WheelEvent.DOM_DELTA_PAGE ? scroller.clientWidth : 1;
+      const deltaY = event.deltaY * pixelsPerDeltaUnit;
       if (event.ctrlKey) {
         event.preventDefault();
         const viewportX = event.clientX - scroller.getBoundingClientRect().left - LABEL_WIDTH;
@@ -117,28 +122,31 @@ export function Timeline({
           position: rangeStartRef.current + (scroller.scrollLeft + viewportX) / pxPerMonthRef.current,
           viewportX,
         };
-        const zoomed = pxPerMonthRef.current * Math.exp(-event.deltaY * 0.01);
+        const zoomed = pxPerMonthRef.current * Math.exp(-deltaY * 0.01);
         onPxPerMonthChange(Math.min(MAX_PX_PER_MONTH, Math.max(MIN_PX_PER_MONTH, zoomed)));
       } else if (Math.abs(event.deltaY) > Math.abs(event.deltaX) && scroller.scrollHeight <= scroller.clientHeight) {
         event.preventDefault();
-        scroller.scrollLeft += event.deltaY;
+        scroller.scrollLeft += deltaY;
       }
     };
     scroller.addEventListener('wheel', handleWheel, { passive: false });
     return () => scroller.removeEventListener('wheel', handleWheel);
   }, [onPxPerMonthChange]);
 
+  /** The timeline position under a pointer, or null when it's over the lane labels. */
+  const positionAtClientX = (clientX: number) => {
+    const scroller = scrollRef.current;
+    if (!scroller) return null;
+    const viewportX = clientX - scroller.getBoundingClientRect().left - LABEL_WIDTH;
+    return viewportX < 0 ? null : range.start + (scroller.scrollLeft + viewportX) / pxPerMonth;
+  };
+
   const handleScroll = () => {
     const scroller = scrollRef.current;
     if (!scroller) return;
     const viewportX = (scroller.clientWidth - LABEL_WIDTH) / 2;
     zoomAnchorRef.current = { position: range.start + (scroller.scrollLeft + viewportX) / pxPerMonth, viewportX };
-  };
-
-  const positionAtPointer = (event: MouseEvent<HTMLElement>) => {
-    const bodyLeft = event.currentTarget.getBoundingClientRect().left;
-    const x = event.clientX - bodyLeft - LABEL_WIDTH;
-    return x < 0 ? null : range.start + x / pxPerMonth;
+    if (pointerClientXRef.current !== null) onHoverPositionChange(positionAtClientX(pointerClientXRef.current));
   };
 
   const canvasStyle = {
@@ -170,8 +178,14 @@ export function Timeline({
 
         <div
           className="timeline-body"
-          onMouseMove={(event) => onHoverPositionChange(positionAtPointer(event))}
-          onMouseLeave={() => onHoverPositionChange(null)}
+          onMouseMove={(event) => {
+            pointerClientXRef.current = event.clientX;
+            onHoverPositionChange(positionAtClientX(event.clientX));
+          }}
+          onMouseLeave={() => {
+            pointerClientXRef.current = null;
+            onHoverPositionChange(null);
+          }}
         >
           <div className={`timeline-grid ${pxPerMonth >= 10 ? 'show-months' : ''}`} style={{ width: totalWidth }}>
             {birthdays.map(({ age, position }) => (
@@ -236,33 +250,34 @@ export function Timeline({
                 className="lane-track"
                 style={{ width: totalWidth }}
                 onDoubleClick={(event) => {
-                  const position = positionAtPointer(event);
+                  const position = positionAtClientX(event.clientX);
                   if (event.target === event.currentTarget && position !== null) {
                     onCreateItem(category.id, Math.floor(position));
                   }
                 }}
               >
-                {placed.map(({ item, start, end, row }) => (
-                  <button
-                    key={item.id}
-                    className={`bar ${item.end === null ? 'ongoing' : ''}`}
-                    style={{
-                      left: xOf(start),
-                      width: Math.max(4, (end - start) * pxPerMonth - 2),
-                      top: LANE_PADDING + row * ROW_HEIGHT,
-                      '--item-color': PALETTE[item.color],
-                    } as CSSProperties}
-                    title={`${item.label}\n${formatMonth(start)} – ${item.end === null ? 'now' : formatMonth(end - 1)}${item.notes ? `\n\n${item.notes}` : ''}`}
-                    onClick={() => onItemClick(item)}
-                  >
-                    <span className="bar-content">
-                      <span className="bar-label">{item.label}</span>
-                      <span className="bar-dates">
-                        {formatMonth(start)} – {item.end === null ? 'now' : formatMonth(end - 1)}
+                {placed.map(({ item, start, end, row }) => {
+                  const dates = `${formatMonth(start)} – ${item.end === null ? 'now' : formatMonth(end - 1)}`;
+                  return (
+                    <button
+                      key={item.id}
+                      className={`bar ${item.end === null ? 'ongoing' : ''}`}
+                      style={{
+                        left: xOf(start),
+                        width: Math.max(4, (end - start) * pxPerMonth - 2),
+                        top: LANE_PADDING + row * ROW_HEIGHT,
+                        '--item-color': PALETTE[item.color],
+                      } as CSSProperties}
+                      title={`${item.label}\n${dates}${item.notes ? `\n\n${item.notes}` : ''}`}
+                      onClick={() => onItemClick(item)}
+                    >
+                      <span className="bar-content">
+                        <span className="bar-label">{item.label}</span>
+                        <span className="bar-dates">{dates}</span>
                       </span>
-                    </span>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           ))}

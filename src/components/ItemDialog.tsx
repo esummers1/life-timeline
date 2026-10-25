@@ -24,7 +24,7 @@ export function ItemDialog({ item: initialItem, isNew, categories, onSave, onDel
   const [item, setItem] = useState(initialItem);
 
   useEffect(() => {
-    dialogRef.current?.showModal();
+    if (!dialogRef.current?.open) dialogRef.current?.showModal();
   }, []);
 
   const isEndBeforeStart = item.end !== null && parseMonthKey(item.end)! < parseMonthKey(item.start)!;

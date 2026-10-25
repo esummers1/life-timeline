@@ -15,8 +15,9 @@ export function createDefaultTimeline(): TimelineData {
 
 /**
  * Validates untrusted JSON (an imported file or saved state) as timeline data.
- * Throws an Error describing the first problem found. Unknown colours fall back
- * to the first palette colour rather than failing the whole import.
+ * Throws an Error describing the first problem found, including duplicate ids,
+ * which would make edits to one item or lane affect another. Unknown colours fall
+ * back to the first palette colour rather than failing the whole import.
  */
 export function parseTimeline(json: unknown): TimelineData {
   if (!isRecord(json) || json.version !== 1) {
@@ -36,6 +37,7 @@ export function parseTimeline(json: unknown): TimelineData {
     return { id: category.id, name: category.name };
   });
   const categoryIds = new Set(categories.map((category) => category.id));
+  if (categoryIds.size !== categories.length) throw new Error('Two categories share the same "id".');
 
   const items: LifeItem[] = json.items.map((item, index) => {
     const description = `Item ${index + 1}`;
@@ -69,14 +71,33 @@ export function parseTimeline(json: unknown): TimelineData {
     };
   });
 
+  if (new Set(items.map((item) => item.id)).size !== items.length) {
+    throw new Error('Two items share the same "id".');
+  }
+
   return { version: 1, birthday: json.birthday, categories, items };
 }
 
+/**
+ * Loads the saved timeline, or null if there isn't one. Saved data that can't be
+ * read is copied to a separate `…:unreadable-<timestamp>` key before returning null,
+ * so starting afresh (which saves over the main key) never destroys it.
+ */
 export function loadTimeline(): TimelineData | null {
+  let saved: string | null = null;
   try {
-    const saved = localStorage.getItem(TIMELINE_STORAGE_KEY);
+    saved = localStorage.getItem(TIMELINE_STORAGE_KEY);
     return saved ? parseTimeline(JSON.parse(saved)) : null;
-  } catch {
+  } catch (error) {
+    if (saved) {
+      const backupKey = `${TIMELINE_STORAGE_KEY}:unreadable-${Date.now()}`;
+      console.error(`Couldn’t read the saved timeline; kept a copy in localStorage under "${backupKey}".`, error);
+      try {
+        localStorage.setItem(backupKey, saved);
+      } catch {
+        // Nothing more can be done if storage is full or unavailable.
+      }
+    }
     return null;
   }
 }

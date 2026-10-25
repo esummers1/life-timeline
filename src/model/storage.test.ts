@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { suggestColor } from './palette';
-import { createDefaultTimeline, parseTimeline } from './storage';
+import { createDefaultTimeline, loadTimeline, parseTimeline } from './storage';
 import example from '../../examples/sample-timeline.json';
 
 const validTimeline = {
@@ -36,8 +36,44 @@ describe('parseTimeline', () => {
     ['an unknown category', { ...validTimeline, items: [{ ...validTimeline.items[0], categoryId: 'work' }] }, /unknown category/],
     ['a malformed start', { ...validTimeline, items: [{ ...validTimeline.items[0], start: 'May 2010' }] }, /start/],
     ['an end before the start', { ...validTimeline, items: [{ ...validTimeline.items[0], end: '2009-01' }] }, /end/],
+    ['duplicate category ids', { ...validTimeline, categories: [...validTimeline.categories, validTimeline.categories[0]] }, /categories share/],
+    ['duplicate item ids', { ...validTimeline, items: [validTimeline.items[0], validTimeline.items[0]] }, /items share/],
   ])('rejects %s', (_description, json, message) => {
     expect(() => parseTimeline(json)).toThrow(message);
+  });
+});
+
+describe('loadTimeline', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  function stubStorage(entries: Record<string, string>) {
+    const storage = new Map(Object.entries(entries));
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => storage.get(key) ?? null,
+      setItem: (key: string, value: string) => storage.set(key, value),
+    });
+    return storage;
+  }
+
+  it('loads saved data', () => {
+    stubStorage({ 'life-timeline:data': JSON.stringify(validTimeline) });
+    expect(loadTimeline()).toEqual(validTimeline);
+  });
+
+  it('returns null when nothing is saved', () => {
+    stubStorage({});
+    expect(loadTimeline()).toBeNull();
+  });
+
+  it('keeps a copy of unreadable saved data rather than letting it be overwritten', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const storage = stubStorage({ 'life-timeline:data': '{"version": 2}' });
+    expect(loadTimeline()).toBeNull();
+    const backups = [...storage].filter(([key]) => key.startsWith('life-timeline:data:unreadable-'));
+    expect(backups.map(([, value]) => value)).toEqual(['{"version": 2}']);
   });
 });
 

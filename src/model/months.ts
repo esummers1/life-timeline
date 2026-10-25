@@ -64,6 +64,18 @@ export function parseDateKey(key: DateKey): CalendarDate | null {
 }
 
 /**
+ * Whether a birthday entry should be accepted: empty (clearing it), or a real date
+ * from 1900 up to `today`. Rejects the in-between values a date field reports while
+ * its year is being typed, such as year 0001.
+ */
+export function isPlausibleBirthday(key: DateKey, today: Date): boolean {
+  if (key === '') return true;
+  const date = parseDateKey(key);
+  if (!date || date.year < 1900) return false;
+  return positionOfDay(date.year, date.month, date.day) <= positionOfDate(today);
+}
+
+/**
  * The fractional month position of a day. Days that don't exist in the month
  * (a 29 February birthday in a non-leap year) are clamped to the month's last day.
  */

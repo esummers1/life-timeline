@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { ageAt, formatMonth, parseDateKey, parseMonthKey, positionOfDay, seasonOf, toMonthKey } from './months';
+import {
+  ageAt, formatMonth, isPlausibleBirthday, parseDateKey, parseMonthKey, positionOfDay, seasonOf, toMonthKey,
+} from './months';
 
 describe('month keys', () => {
   it('round-trips between keys and indices', () => {
@@ -23,6 +25,23 @@ describe('parseDateKey', () => {
     expect(parseDateKey('1990-04-12')).toEqual({ year: 1990, month: 3, day: 12 });
     expect(parseDateKey('2023-02-29')).toBeNull();
     expect(parseDateKey('2024-02-29')).not.toBeNull();
+  });
+});
+
+describe('isPlausibleBirthday', () => {
+  const today = new Date(2026, 9, 21);
+
+  it('accepts clearing the birthday and real past dates', () => {
+    expect(isPlausibleBirthday('', today)).toBe(true);
+    expect(isPlausibleBirthday('1990-04-12', today)).toBe(true);
+    expect(isPlausibleBirthday('2026-10-21', today)).toBe(true);
+  });
+
+  it('rejects half-typed years, future dates and impossible dates', () => {
+    expect(isPlausibleBirthday('0001-04-12', today)).toBe(false);
+    expect(isPlausibleBirthday('0199-04-12', today)).toBe(false);
+    expect(isPlausibleBirthday('2026-10-22', today)).toBe(false);
+    expect(isPlausibleBirthday('1990-02-30', today)).toBe(false);
   });
 });
 

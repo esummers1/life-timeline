@@ -426,6 +426,12 @@ textarea {
   opacity: 1;
 }
 
+@media (hover: none) {
+  .lane-actions {
+    opacity: 1;
+  }
+}
+
 .lane-add {
   height: 44px;
   border-bottom: none;
