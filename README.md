@@ -1,5 +1,8 @@
 # 🗓️ Life Timeline
 
+[![CI](https://github.com/esummers1/life-timeline/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/esummers1/life-timeline/actions/workflows/ci.yml)
+[![Deploy](https://github.com/esummers1/life-timeline/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/esummers1/life-timeline/actions/workflows/deploy.yml)
+
 A small web app for seeing the overlapping parts of your life (where you lived, where you worked, what you drove) side by side on one timeline, so you can look at any moment and see how it all fitted together.
 
 Each kind of thing gets its own swimlane. Time scrolls horizontally, with years, months and seasons along the top, and a dotted line marks each of your birthdays.
