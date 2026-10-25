@@ -17,6 +17,10 @@ describe('parseTimeline', () => {
     expect(parseTimeline(JSON.parse(JSON.stringify(defaults)))).toEqual(defaults);
   });
 
+  it('starts new timelines with the default lanes', () => {
+    expect(createDefaultTimeline().categories.map(({ name }) => name)).toEqual(['Home', 'Education', 'Work', 'Relationship']);
+  });
+
   it('accepts the bundled example file', () => {
     expect(parseTimeline(example).items.length).toBeGreaterThan(0);
   });

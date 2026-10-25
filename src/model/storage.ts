@@ -8,7 +8,7 @@ export function createDefaultTimeline(): TimelineData {
   return {
     version: 1,
     birthday: null,
-    categories: ['Home', 'Work', 'Car'].map((name) => ({ id: crypto.randomUUID(), name })),
+    categories: ['Home', 'Education', 'Work', 'Relationship'].map((name) => ({ id: crypto.randomUUID(), name })),
     items: [],
   };
 }
