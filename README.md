@@ -18,7 +18,7 @@ npm run dev
 
 Open the address it prints (usually http://localhost:5173).
 
-To see what a filled-in timeline looks like, click Import and choose `examples/sample-timeline.json`.
+To see what a filled-in timeline looks like, pick someone from "Try a sample…" in the toolbar: Homer Simpson, Luke Skywalker or Arnold Schwarzenegger. When you're ready to add your own life, click "Start your own timeline" (or "Start over" at any time).
 
 ## 🧭 Using it
 
@@ -34,6 +34,8 @@ To see what a filled-in timeline looks like, click Import and choose `examples/s
 ## 💾 Saving your data
 
 Everything is saved automatically in your browser's local storage, so it will still be there when you come back. That storage belongs to one browser on one machine, though, so use Export to save a JSON file as a backup or to move to another browser, and Import to load one back in.
+
+Loading a sample, starting over or importing replaces your whole timeline, so the app asks first and offers to export a copy.
 
 ## 🛠️ Development
 

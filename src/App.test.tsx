@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { App } from './App';
+import { SAMPLES } from './samples';
 import type { TimelineData } from './model/types';
 
 const savedTimeline: TimelineData = {
@@ -119,9 +120,8 @@ describe('App', () => {
     expect(screen.getByText('Autumn · Age 36')).toBeInTheDocument();
   });
 
-  it('imports a timeline file, asking before replacing existing items', async () => {
+  it('imports a timeline file, confirming before replacing existing items', async () => {
     const user = renderApp(savedTimeline);
-    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
     const imported: TimelineData = {
       version: 1,
       birthday: null,
@@ -131,8 +131,9 @@ describe('App', () => {
     const file = new File([JSON.stringify(imported)], 'timeline.json', { type: 'application/json' });
 
     await user.upload(document.querySelector<HTMLInputElement>('input[type=file]')!, file);
-    await waitFor(() => expect(laneNames()).toEqual(['Pets']));
-    expect(confirm).toHaveBeenCalled();
+    const dialog = within(await screen.findByRole('dialog', { name: 'Import timeline.json?' }));
+    await user.click(dialog.getByRole('button', { name: 'Import' }));
+    expect(laneNames()).toEqual(['Pets']);
     expect(stored()).toEqual(imported);
   });
 
@@ -161,6 +162,92 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: 'Export' }));
     expect(click).toHaveBeenCalled();
     expect(JSON.parse(await exported!.text())).toEqual(savedTimeline);
+  });
+
+  describe('samples', () => {
+    const [homer, luke] = SAMPLES;
+    const chooseSample = (user: ReturnType<typeof userEvent.setup>, name: string) =>
+      user.selectOptions(screen.getByRole('combobox', { name: 'Try a sample' }), name);
+    const sampleLaneNames = (sample: (typeof SAMPLES)[number]) => sample.timeline.categories.map(({ name }) => name);
+
+    function stubDownloads() {
+      URL.createObjectURL = vi.fn(() => 'blob:timeline');
+      URL.revokeObjectURL = vi.fn();
+      return vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    }
+
+    it('loads a sample straight away when there is nothing to lose, and says it is a sample', async () => {
+      const user = renderApp();
+      await chooseSample(user, 'Homer Simpson');
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(laneNames()).toEqual(sampleLaneNames(homer));
+      expect(stored()).toEqual(homer.timeline);
+      expect(screen.getByRole('status')).toHaveTextContent(`You’re looking at Homer Simpson’s sample timeline. ${homer.note}`);
+    });
+
+    it('switches between untouched samples without asking', async () => {
+      const user = renderApp(homer.timeline);
+      await chooseSample(user, 'Luke Skywalker');
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(laneNames()).toEqual(sampleLaneNames(luke));
+    });
+
+    it('asks before replacing your own data, offering an export first', async () => {
+      const user = renderApp(savedTimeline);
+      const download = stubDownloads();
+
+      await chooseSample(user, 'Luke Skywalker');
+      let dialog = within(screen.getByRole('dialog', { name: 'Load Luke Skywalker’s timeline?' }));
+      expect(dialog.getByText(/including its 2 items/)).toBeInTheDocument();
+      await user.click(dialog.getByRole('button', { name: 'Cancel' }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(stored()).toEqual(savedTimeline);
+
+      await chooseSample(user, 'Luke Skywalker');
+      dialog = within(screen.getByRole('dialog'));
+      await user.click(dialog.getByRole('button', { name: 'Export a copy' }));
+      expect(download).toHaveBeenCalledTimes(1);
+      expect(dialog.getByRole('button', { name: 'Exported ✓' })).toBeDisabled();
+      await user.click(dialog.getByRole('button', { name: 'Load sample' }));
+
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(stored()).toEqual(luke.timeline);
+    });
+
+    it('asks before replacing a sample you have edited, since it is now your data', async () => {
+      const user = renderApp(homer.timeline);
+      await user.click(screen.getByRole('button', { name: /^Mr\. Plow/ }));
+      await user.type(within(screen.getByRole('dialog')).getByLabelText('Label'), '!');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+
+      await chooseSample(user, 'Luke Skywalker');
+      expect(screen.getByRole('dialog', { name: 'Load Luke Skywalker’s timeline?' })).toBeInTheDocument();
+    });
+
+    it('clears a sample to start your own timeline', async () => {
+      const user = renderApp(homer.timeline);
+      await user.click(within(screen.getByRole('status')).getByRole('button', { name: 'Start your own timeline' }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+      expect(laneNames()).toEqual(['Home', 'Education', 'Work', 'Relationship']);
+      expect(stored()).toMatchObject({ birthday: null, items: [] });
+    });
+
+    it('still asks when you have set a birthday but added no items', async () => {
+      const user = renderApp({ ...savedTimeline, items: [] });
+      await user.click(screen.getByRole('button', { name: 'Start over' }));
+      expect(within(screen.getByRole('dialog')).getByText(/^This replaces everything on your timeline, and can’t be undone\./))
+        .toBeInTheDocument();
+    });
+
+    it('starts over from your own data after confirming', async () => {
+      const user = renderApp(savedTimeline);
+      await user.click(screen.getByRole('button', { name: 'Start over' }));
+      await user.click(within(screen.getByRole('dialog', { name: 'Start a new timeline?' })).getByRole('button', { name: 'Start over' }));
+      expect(laneNames()).toEqual(['Home', 'Education', 'Work', 'Relationship']);
+      expect(stored().items).toEqual([]);
+    });
   });
 
   it('cycles the theme between automatic, light and dark, and remembers it', async () => {
