@@ -37,8 +37,9 @@ Everything is saved automatically in your browser's local storage, so it will st
 The app is built with React, TypeScript and Vite, and has no backend.
 
 ```bash
-npm test        # run the unit tests
-npm run build   # type-check and build to dist/
+npm test               # run the tests
+npm run test:coverage  # run the tests and report coverage
+npm run build          # type-check and build to dist/
 ```
 
 The timeline logic (dates, ages, lane stacking, file validation) lives in `src/model`, and the UI in `src/components`.
