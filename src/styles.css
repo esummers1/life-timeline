@@ -154,6 +154,32 @@ textarea {
   background: color-mix(in oklab, var(--accent) 88%, var(--text));
 }
 
+select.button {
+  padding-right: 28px;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.sample-banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in oklab, var(--accent) 12%, var(--surface));
+  font-size: 13px;
+}
+
+.sample-banner span {
+  flex: 1;
+  min-width: 240px;
+}
+
 .button.danger {
   color: var(--danger);
 }
@@ -404,10 +430,16 @@ textarea {
   background: var(--surface-raised);
 }
 
+/* Floats over the end of the lane name on hover, so hidden buttons don't truncate it. */
 .lane-actions {
+  position: absolute;
+  right: 6px;
   display: flex;
   align-items: center;
+  padding-left: 12px;
+  background: linear-gradient(to right, transparent, var(--surface) 12px);
   opacity: 0;
+  pointer-events: none;
   transition: opacity 120ms;
 }
 
@@ -424,11 +456,15 @@ textarea {
 .lane:hover .lane-actions,
 .lane-actions:focus-within {
   opacity: 1;
+  pointer-events: auto;
 }
 
 @media (hover: none) {
   .lane-actions {
+    position: static;
+    padding-left: 0;
     opacity: 1;
+    pointer-events: auto;
   }
 }
 
@@ -604,6 +640,11 @@ textarea {
 .dialog h2 {
   margin: 0;
   font-size: 17px;
+}
+
+.dialog-text {
+  margin: 0;
+  color: var(--text-muted);
 }
 
 .field {

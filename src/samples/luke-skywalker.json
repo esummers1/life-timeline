@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "birthday": "1958-05-25",
+  "categories": [
+    {
+      "id": "luke-home",
+      "name": "Home"
+    },
+    {
+      "id": "luke-training",
+      "name": "Training"
+    },
+    {
+      "id": "luke-work",
+      "name": "Work"
+    },
+    {
+      "id": "luke-relationship",
+      "name": "Relationship"
+    },
+    {
+      "id": "luke-vehicle",
+      "name": "Vehicles"
+    }
+  ],
+  "items": [
+    {
+      "id": "luke-1",
+      "categoryId": "luke-home",
+      "label": "Lars homestead, Tatooine",
+      "start": "1958-05",
+      "end": "1977-05",
+      "color": "amber",
+      "notes": "Raised by his Uncle Owen and Aunt Beru."
+    },
+    {
+      "id": "luke-2",
+      "categoryId": "luke-home",
+      "label": "Rebel base, Yavin 4",
+      "start": "1977-05",
+      "end": "1979-11",
+      "color": "green"
+    },
+    {
+      "id": "luke-3",
+      "categoryId": "luke-home",
+      "label": "Echo Base, Hoth",
+      "start": "1979-12",
+      "end": "1980-05",
+      "color": "blue"
+    },
+    {
+      "id": "luke-4",
+      "categoryId": "luke-home",
+      "label": "Dagobah",
+      "start": "1980-05",
+      "end": "1980-06",
+      "color": "lime"
+    },
+    {
+      "id": "luke-5",
+      "categoryId": "luke-home",
+      "label": "With the Rebel fleet",
+      "start": "1980-07",
+      "end": "1983-06",
+      "color": "slate"
+    },
+    {
+      "id": "luke-6",
+      "categoryId": "luke-home",
+      "label": "His own Jedi temple",
+      "start": "1999-01",
+      "end": "2005-06",
+      "color": "violet"
+    },
+    {
+      "id": "luke-7",
+      "categoryId": "luke-home",
+      "label": "Exile on Ahch-To",
+      "start": "2005-07",
+      "end": "2011-05",
+      "color": "teal"
+    },
+    {
+      "id": "luke-8",
+      "categoryId": "luke-training",
+      "label": "Lessons from Obi-Wan Kenobi",
+      "start": "1977-05",
+      "end": "1977-05",
+      "color": "teal",
+      "notes": "Use the Force, Luke."
+    },
+    {
+      "id": "luke-9",
+      "categoryId": "luke-training",
+      "label": "Training with Yoda",
+      "start": "1980-05",
+      "end": "1980-06",
+      "color": "lime",
+      "notes": "Do. Or do not. There is no try."
+    },
+    {
+      "id": "luke-10",
+      "categoryId": "luke-training",
+      "label": "Yoda's final lesson",
+      "start": "1983-04",
+      "end": "1983-04",
+      "color": "green"
+    },
+    {
+      "id": "luke-11",
+      "categoryId": "luke-work",
+      "label": "Moisture farmer",
+      "start": "1970-01",
+      "end": "1977-05",
+      "color": "amber",
+      "notes": "Wanted to go to Tosche Station to pick up some power converters."
+    },
+    {
+      "id": "luke-12",
+      "categoryId": "luke-work",
+      "label": "Rebel pilot, Red Five",
+      "start": "1977-05",
+      "end": "1983-06",
+      "color": "red",
+      "notes": "Destroyed the first Death Star."
+    },
+    {
+      "id": "luke-13",
+      "categoryId": "luke-work",
+      "label": "Jedi Knight",
+      "start": "1983-06",
+      "end": "2011-05",
+      "color": "blue"
+    },
+    {
+      "id": "luke-14",
+      "categoryId": "luke-work",
+      "label": "Teaching a new generation of Jedi",
+      "start": "1999-01",
+      "end": "2005-06",
+      "color": "violet"
+    },
+    {
+      "id": "luke-15",
+      "categoryId": "luke-work",
+      "label": "Training Rey (reluctantly)",
+      "start": "2011-03",
+      "end": "2011-05",
+      "color": "orange"
+    },
+    {
+      "id": "luke-16",
+      "categoryId": "luke-relationship",
+      "label": "Friends with Han, Leia and Chewie",
+      "start": "1977-05",
+      "end": "2011-05",
+      "color": "pink"
+    },
+    {
+      "id": "luke-17",
+      "categoryId": "luke-relationship",
+      "label": "Knows Vader is his father",
+      "start": "1980-05",
+      "end": "2011-05",
+      "color": "slate",
+      "notes": "No. I am your father."
+    },
+    {
+      "id": "luke-18",
+      "categoryId": "luke-relationship",
+      "label": "Knows Leia is his twin sister",
+      "start": "1983-05",
+      "end": "2011-05",
+      "color": "indigo"
+    },
+    {
+      "id": "luke-19",
+      "categoryId": "luke-vehicle",
+      "label": "T-16 skyhopper",
+      "start": "1972-01",
+      "end": "1977-05",
+      "color": "orange",
+      "notes": "Used to bullseye womp rats in Beggar’s Canyon."
+    },
+    {
+      "id": "luke-20",
+      "categoryId": "luke-vehicle",
+      "label": "X-34 landspeeder",
+      "start": "1975-01",
+      "end": "1977-05",
+      "color": "amber"
+    },
+    {
+      "id": "luke-21",
+      "categoryId": "luke-vehicle",
+      "label": "X-wing, Red Five",
+      "start": "1977-05",
+      "end": "2005-07",
+      "color": "red",
+      "notes": "Eventually sank off the coast of Ahch-To."
+    }
+  ]
+}
