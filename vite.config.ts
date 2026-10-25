@@ -5,4 +5,12 @@ export default defineConfig({
   plugins: [react()],
   // Relative asset URLs, so the build works from any path, such as GitHub Pages' /life-timeline/.
   base: './',
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['src/test/setup.ts'],
+    coverage: {
+      include: ['src/**'],
+      exclude: ['src/main.tsx', 'src/test/**', '**/*.test.*'],
+    },
+  },
 });
