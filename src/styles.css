@@ -543,6 +543,7 @@ textarea {
 
 /* One line only, so the bar keeps its height (and the timeline stays put) while hovering. */
 .snapshot-lanes {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 20px;
