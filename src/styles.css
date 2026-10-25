@@ -541,14 +541,18 @@ textarea {
   font-size: 12px;
 }
 
+/* One line only, so the bar keeps its height (and the timeline stays put) while hovering. */
 .snapshot-lanes {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 8px 20px;
+  gap: 20px;
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
 }
 
 .snapshot-lane {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -560,6 +564,10 @@ textarea {
 }
 
 .chip {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 2px 9px;
   border-radius: 999px;
   background: color-mix(in oklab, var(--item-color) 20%, var(--surface));

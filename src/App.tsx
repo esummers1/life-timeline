@@ -9,6 +9,7 @@ import { createDefaultTimeline, loadTimeline, parseTimeline, saveTimeline } from
 import type { DateKey, LifeItem, TimelineData } from './model/types';
 
 type ThemePreference = 'system' | 'light' | 'dark';
+// Also read by the inline script in index.html, which applies the theme before first paint.
 const THEME_STORAGE_KEY = 'life-timeline:theme';
 const THEME_ORDER: ThemePreference[] = ['system', 'light', 'dark'];
 
