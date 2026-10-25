@@ -1,10 +1,10 @@
-# Life Timeline
+# 🗓️ Life Timeline
 
 A small web app for seeing the overlapping parts of your life (where you lived, where you worked, what you drove) side by side on one timeline, so you can look at any moment and see how it all fitted together.
 
 Each kind of thing gets its own swimlane. Time scrolls horizontally, with years, months and seasons along the top, and a dotted line marks each of your birthdays.
 
-## Getting started
+## 🚀 Getting started
 
 You'll need Node.js. Then:
 
@@ -17,7 +17,7 @@ Open the address it prints (usually http://localhost:5173).
 
 To see what a filled-in timeline looks like, click Import and choose `examples/sample-timeline.json`.
 
-## Using it
+## 🧭 Using it
 
 - Set your birthday in the toolbar to get birthday lines and ages.
 - Add something with the "+ Add item" button, the + on a lane, or by double-clicking an empty spot in a lane. Give it a label, a start and end month (or mark it as ongoing) and a colour.
@@ -28,11 +28,11 @@ To see what a filled-in timeline looks like, click Import and choose `examples/s
 - Zoom with the slider or by pinching (or Ctrl+scroll). Fully zoomed out, the whole timeline fits the window.
 - The theme button switches between automatic, light and dark mode.
 
-## Saving your data
+## 💾 Saving your data
 
 Everything is saved automatically in your browser's local storage, so it will still be there when you come back. That storage belongs to one browser on one machine, though, so use Export to save a JSON file as a backup or to move to another browser, and Import to load one back in.
 
-## Development
+## 🛠️ Development
 
 The app is built with React, TypeScript and Vite, and has no backend.
 
