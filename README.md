@@ -42,3 +42,11 @@ npm run build   # type-check and build to dist/
 ```
 
 The timeline logic (dates, ages, lane stacking, file validation) lives in `src/model`, and the UI in `src/components`.
+
+## 🌍 Deployment
+
+The app is hosted on GitHub Pages at https://esummers1.github.io/life-timeline/.
+
+The workflow in `.github/workflows/ci-cd.yml` type-checks, tests and builds every pull request and every push to `main`. When a push to `main` passes, the build is published to Pages, so merging to `main` is all it takes to release.
+
+To set this up on a fork or a new repository, open the repository's Settings, go to Pages, and set the source to "GitHub Actions". The build uses relative paths, so it works whatever the repository is called.
